@@ -1137,7 +1137,7 @@ GeometryData generateUVDiskGeometryData(float innerRadius, float outerRadius) {
     };
 }
 
-GeometryData generateCircleGeometryData(float radius, int angularResolution, int radialResolution) {
+GeometryData generateCircleGeometryData(float radius, int angularResolution, int radialResolution, bool radialUVs) {
     const int radial = radialResolution > 0 ? radialResolution : 1;
     const int angular = angularResolution > 2 ? angularResolution : 3;
 
@@ -1166,11 +1166,12 @@ GeometryData generateCircleGeometryData(float radius, int angularResolution, int
             const float angle = af * angularInc;
             const float x = rad * cos(angle);
             const float y = rad * sin(angle);
-
+            const simd_float2 uv = radialUVs ? simd_make_float2(rf / radialf, af / angularf) : simd_make_float2( x / (2.0 * radius) + 0.5, y / (2.0 * radius) + 0.5);
+            
             vtx[vertexIndex++] =
                 (SatinVertex) { .position = simd_make_float3(x, y, 0.0),
                                 .normal = simd_make_float3(0.0, 0.0, 1.0),
-                                .uv = simd_make_float2(rf / radialf, af / angularf) };
+                                .uv = uv};
 
             if (r != radial && a != angular) {
                 const uint32_t index = a + r * perLoop;

@@ -72,7 +72,7 @@ GeometryData generateSkyboxGeometryData(float size);
 
 GeometryData generateUVDiskGeometryData(float innerRadius, float outerRadius);
 
-GeometryData generateCircleGeometryData(float radius, int angularResolution, int radialResolution);
+GeometryData generateCircleGeometryData(float radius, int angularResolution, int radialResolution, bool radialUVs);
 
 GeometryData generateTriangleGeometryData(float size);
 
