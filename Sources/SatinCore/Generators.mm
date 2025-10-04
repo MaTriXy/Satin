@@ -1622,7 +1622,8 @@ GeometryData generateRoundedRectGeometryData(
     int angularResolution,
     int edgeXResolution,
     int edgeYResolution,
-    int radialResolution) {
+    int radialResolution,
+    bool radialUVs) {
     const float twoPi = M_PI * 2.0;
     const float halfPi = M_PI * 0.5;
 
@@ -1673,15 +1674,19 @@ GeometryData generateRoundedRectGeometryData(
         for (int i = 0; i < edgeY; i++) {
             const float t = (float)i / edgeYMinusOnef;
             const simd_float2 pos = simd_mix(start, end, t);
-
+            
             vtx[vertexIndex].position = simd_make_float3(n * pos, 0.0);
             vtx[vertexIndex].normal = normal;
 
-            const float angle = angle2(pos);
-            const float uvx = angle / twoPi;
-            const float uvy = n;
-
-            vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
+            if (radialUVs) {
+                const float angle = angle2(pos);
+                const float uvx = angle / twoPi;
+                const float uvy = n;
+                vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
+            } else {
+                vtx[vertexIndex].uv = simd_make_float2( ( n * pos.x + widthHalf) / width, (n * pos.y + heightHalf) / height );
+            }
+            
             vertexIndex++;
         }
 
@@ -1697,11 +1702,15 @@ GeometryData generateRoundedRectGeometryData(
             vtx[vertexIndex].position = simd_make_float3(n * pos, 0.0);
             vtx[vertexIndex].normal = normal;
 
-            const float angle = angle2(pos);
-            const float uvx = angle / twoPi;
-            const float uvy = n;
+            if (radialUVs) {
+                const float angle = angle2(pos);
+                const float uvx = angle / twoPi;
+                const float uvy = n;
+                vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
+            } else {
+                vtx[vertexIndex].uv = simd_make_float2( ( n * pos.x + widthHalf) / width, (n * pos.y + heightHalf) / height );
+            }
 
-            vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
             vertexIndex++;
         }
 
@@ -1715,11 +1724,15 @@ GeometryData generateRoundedRectGeometryData(
             vtx[vertexIndex].position = simd_make_float3(n * pos, 0.0);
             vtx[vertexIndex].normal = normal;
 
-            const float angle = angle2(pos);
-            const float uvx = angle / twoPi;
-            const float uvy = n;
-
-            vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
+            if (radialUVs) {
+                const float angle = angle2(pos);
+                const float uvx = angle / twoPi;
+                const float uvy = n;
+                vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
+            } else {
+                vtx[vertexIndex].uv = simd_make_float2( ( n * pos.x + widthHalf) / width, (n * pos.y + heightHalf) / height );
+            }
+            
             vertexIndex++;
         }
 
@@ -1735,11 +1748,15 @@ GeometryData generateRoundedRectGeometryData(
             vtx[vertexIndex].position = simd_make_float3(n * pos, 0.0);
             vtx[vertexIndex].normal = normal;
 
-            const float angle = angle2(pos);
-            const float uvx = angle / twoPi;
-            const float uvy = n;
+            if (radialUVs) {
+                const float angle = angle2(pos);
+                const float uvx = angle / twoPi;
+                const float uvy = n;
+                vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
+            } else {
+                vtx[vertexIndex].uv = simd_make_float2( ( n * pos.x + widthHalf) / width, (n * pos.y + heightHalf) / height );
+            }
 
-            vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
             vertexIndex++;
         }
 
@@ -1753,11 +1770,15 @@ GeometryData generateRoundedRectGeometryData(
             vtx[vertexIndex].position = simd_make_float3(n * pos, 0.0);
             vtx[vertexIndex].normal = normal;
 
-            const float angle = angle2(pos);
-            const float uvx = angle / twoPi;
-            const float uvy = n;
-
-            vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
+            if (radialUVs) {
+                const float angle = angle2(pos);
+                const float uvx = angle / twoPi;
+                const float uvy = n;
+                vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
+            } else {
+                vtx[vertexIndex].uv = simd_make_float2( ( n * pos.x + widthHalf) / width, (n * pos.y + heightHalf) / height );
+            }
+            
             vertexIndex++;
         }
 
@@ -1773,11 +1794,15 @@ GeometryData generateRoundedRectGeometryData(
             vtx[vertexIndex].position = simd_make_float3(n * pos, 0.0);
             vtx[vertexIndex].normal = normal;
 
-            const float angle = angle2(pos);
-            const float uvx = angle / twoPi;
-            const float uvy = n;
-
-            vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
+            if (radialUVs) {
+                const float angle = angle2(pos);
+                const float uvx = angle / twoPi;
+                const float uvy = n;
+                vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
+            } else {
+                vtx[vertexIndex].uv = simd_make_float2( ( n * pos.x + widthHalf) / width, (n * pos.y + heightHalf) / height );
+            }
+            
             vertexIndex++;
         }
 
@@ -1791,11 +1816,15 @@ GeometryData generateRoundedRectGeometryData(
             vtx[vertexIndex].position = simd_make_float3(n * pos, 0.0);
             vtx[vertexIndex].normal = normal;
 
-            const float angle = angle2(pos);
-            const float uvx = angle / twoPi;
-            const float uvy = n;
-
-            vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
+            if (radialUVs) {
+                const float angle = angle2(pos);
+                const float uvx = angle / twoPi;
+                const float uvy = n;
+                vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
+            } else {
+                vtx[vertexIndex].uv = simd_make_float2( ( n * pos.x + widthHalf) / width, (n * pos.y + heightHalf) / height );
+            }
+            
             vertexIndex++;
         }
 
@@ -1811,13 +1840,15 @@ GeometryData generateRoundedRectGeometryData(
             vtx[vertexIndex].position = simd_make_float3(n * pos, 0.0);
             vtx[vertexIndex].normal = normal;
 
-            float angle = angle2(pos);
-            angle = isZero(angle) ? twoPi : angle;
-
-            const float uvx = angle / twoPi;
-            const float uvy = n;
-
-            vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
+            if (radialUVs) {
+                const float angle = angle2(pos);
+                const float uvx = angle / twoPi;
+                const float uvy = n;
+                vtx[vertexIndex].uv = simd_make_float2(uvx, uvy);
+            } else {
+                vtx[vertexIndex].uv = simd_make_float2( ( n * pos.x + widthHalf) / width, (n * pos.y + heightHalf) / height );
+            }
+            
             vertexIndex++;
         }
 
@@ -1852,7 +1883,8 @@ GeometryData generateExtrudedRoundedRectGeometryData(
     int edgeXResolution,
     int edgeYResolution,
     int edgeZResolution,
-    int radialResolution) {
+    int radialResolution,
+    bool radialUVs) {
     GeometryData faceData = generateRoundedRectGeometryData(
         width,
         height,
@@ -1860,7 +1892,8 @@ GeometryData generateExtrudedRoundedRectGeometryData(
         angularResolution,
         edgeXResolution,
         edgeYResolution,
-        radialResolution);
+        radialResolution,
+        radialUVs);
 
     GeometryData result = createGeometryData();
 
