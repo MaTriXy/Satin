@@ -51,13 +51,7 @@ import Foundation
     }
     
     private var internalValue:ValueType
-    {
-        didSet {
-            if internalValue != oldValue {
-                valuePublisher.send(internalValue)
-            }
-        }
-    }
+
     
     public var value: ValueType
     {
@@ -70,9 +64,9 @@ import Foundation
             if self.internalValue != newValue
             {
                 self.valueDidChange = true
+                self.internalValue = newValue
+                valuePublisher.send(newValue)
             }
-            
-            self.internalValue = newValue
         }
     }
 
