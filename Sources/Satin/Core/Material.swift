@@ -26,8 +26,9 @@ public struct DepthBias: Codable, Equatable {
     }
 }
 
-open class Material: Codable, ObservableObject {
-    @Published open var id: String = UUID().uuidString
+@Observable open class Material: Codable {
+    
+    let id: String = UUID().uuidString
 
     var prefix: String {
         var result = String(describing: type(of: self)).replacingOccurrences(of: "Material", with: "")
@@ -38,7 +39,7 @@ open class Material: Codable, ObservableObject {
         return result
     }
 
-    public lazy var label: String = prefix
+    @ObservationIgnored public lazy var label: String = prefix
 
     public var vertexDescriptor: MTLVertexDescriptor {
         get { renderingConfiguration.vertexDescriptor }
@@ -50,7 +51,7 @@ open class Material: Codable, ObservableObject {
         set { renderingConfiguration.tessellationDescriptor = newValue }
     }
 
-    private var parametersSubscription: AnyCancellable?
+    @ObservationIgnored private var parametersSubscription: AnyCancellable?
 
     public private(set) var shader: Shader? {
         didSet {
@@ -91,7 +92,7 @@ open class Material: Codable, ObservableObject {
         set { renderingConfiguration.blending.alphaBlendOperation = newValue }
     }
 
-    private var renderingConfiguration = RenderingConfiguration() {
+    @ObservationIgnored private var renderingConfiguration = RenderingConfiguration() {
         didSet {
             if renderingConfiguration != oldValue, let shader = shader {
                 setupShaderRenderingConfiguration(shader)
@@ -99,19 +100,17 @@ open class Material: Codable, ObservableObject {
         }
     }
 
-    public var uniforms: UniformBuffer?
+    @ObservationIgnored public var uniforms: UniformBuffer?
 
     public let parametersSetPublisher = PassthroughSubject<ParameterGroup, Never>()
-    private var parameterGroupSubscriptions = Set<AnyCancellable>()
-    public private(set) lazy var parameters: ParameterGroup = {
-        let params = ParameterGroup("\(label) Uniforms")
-        setupParameterGroupSubscriptions(params)
-        return params
-    }() {
+    @ObservationIgnored private var parameterGroupSubscriptions = Set<AnyCancellable>()
+    public private(set) var parameters: ParameterGroup = ParameterGroup() {
         didSet {
+            if parameters == oldValue { return }
+            parameters.label = "\(label) Uniforms"
             setupParameterGroupSubscriptions(parameters)
             uniformsNeedsUpdate = true
-            objectWillChange.send()
+            //objectWillChange.send()
             parametersSetPublisher.send(parameters)
         }
     }
@@ -192,8 +191,8 @@ open class Material: Codable, ObservableObject {
         }
     }
 
-    private var uniformsNeedsUpdate = true
-    private var depthNeedsUpdate = false
+    @ObservationIgnored private var uniformsNeedsUpdate = true
+    @ObservationIgnored private var depthNeedsUpdate = false
 
     public var depthBias: DepthBias?
     public var onBind: ((_ renderEncoder: MTLRenderCommandEncoder) -> Void)?
@@ -206,6 +205,10 @@ open class Material: Codable, ObservableObject {
         label = shader.label
         renderingConfiguration = shader.configuration.rendering
         setupShaderParametersSubscription(shader)
+        setupParameterGroupSubscriptions(parameters)
+        uniformsNeedsUpdate = true
+        parametersSetPublisher.send(parameters)
+
     }
 
     // MARK: - CodingKeys
@@ -287,7 +290,7 @@ open class Material: Codable, ObservableObject {
         setupDepthStencilState()
         setupShader()
         setupUniforms()
-        objectWillChange.send()
+//        objectWillChange.send()
     }
 
     private func setupParameterGroupSubscriptions(_ parameterGroup: ParameterGroup) {
@@ -296,30 +299,32 @@ open class Material: Codable, ObservableObject {
         parameterGroup.parameterAddedPublisher.sink { [weak self] _ in
             guard let self else { return }
             self.uniformsNeedsUpdate = true
-            self.objectWillChange.send()
+            //self.objectWillChange.send()
         }.store(in: &parameterGroupSubscriptions)
 
         parameterGroup.parameterRemovedPublisher.sink { [weak self] _ in
             guard let self else { return }
             self.uniformsNeedsUpdate = true
-            self.objectWillChange.send()
+            //self.objectWillChange.send()
         }.store(in: &parameterGroupSubscriptions)
 
         parameterGroup.parameterUpdatedPublisher.sink { [weak self] _ in
             guard let self else { return }
-            self.objectWillChange.send()
+            self.uniformsNeedsUpdate = true
+
+            //self.objectWillChange.send()
         }.store(in: &parameterGroupSubscriptions)
 
         parameterGroup.loadedPublisher.sink { [weak self] _ in
             guard let self else { return }
             self.uniformsNeedsUpdate = true
-            self.objectWillChange.send()
+            //self.objectWillChange.send()
         }.store(in: &parameterGroupSubscriptions)
 
         parameterGroup.clearedPublisher.sink { [weak self] _ in
             guard let self else { return }
             self.uniformsNeedsUpdate = true
-            self.objectWillChange.send()
+            //self.objectWillChange.send()
         }.store(in: &parameterGroupSubscriptions)
     }
 
@@ -363,7 +368,7 @@ open class Material: Codable, ObservableObject {
 
     open func setupShaderRenderingConfiguration(_ shader: Shader) {
         shader.renderingConfiguration = renderingConfiguration
-        objectWillChange.send()
+        //objectWillChange.send()
     }
 
     open func setupShaderParametersSubscription(_ shader: Shader) {
@@ -376,7 +381,7 @@ open class Material: Codable, ObservableObject {
 
             self.uniformsNeedsUpdate = true
 
-            self.objectWillChange.send()
+            //self.objectWillChange.send()
 
             self.parametersSetPublisher.send(self.parameters)
 
