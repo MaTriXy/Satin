@@ -36,15 +36,15 @@ import Observation
 
     public var paramsMap: [String: any Parameter] = [:]
 
-    private var paramSubscriptions: [String: AnyCancellable] = [:]
+    @ObservationIgnored private var paramSubscriptions: [String: AnyCancellable] = [:]
 
-    public let parameterAddedPublisher = PassthroughSubject<any Parameter, Never>()
-    public let parameterRemovedPublisher = PassthroughSubject<any Parameter, Never>()
-    public let parameterUpdatedPublisher = PassthroughSubject<any Parameter, Never>()
+    @ObservationIgnored public let parameterAddedPublisher = PassthroughSubject<any Parameter, Never>()
+    @ObservationIgnored public let parameterRemovedPublisher = PassthroughSubject<any Parameter, Never>()
+    @ObservationIgnored public let parameterUpdatedPublisher = PassthroughSubject<any Parameter, Never>()
 
-    public let loadedPublisher = PassthroughSubject<ParameterGroup, Never>()
-    public let savedPublisher = PassthroughSubject<ParameterGroup, Never>()
-    public let clearedPublisher = PassthroughSubject<ParameterGroup, Never>()
+    @ObservationIgnored public let loadedPublisher = PassthroughSubject<ParameterGroup, Never>()
+    @ObservationIgnored public let savedPublisher = PassthroughSubject<ParameterGroup, Never>()
+    @ObservationIgnored public let clearedPublisher = PassthroughSubject<ParameterGroup, Never>()
 
     deinit {
         params = []
@@ -438,7 +438,7 @@ import Observation
         _stride = result
     }
 
-    public var stride: Int {
+    @ObservationIgnored public var stride: Int {
         if _updateStride {
             updateStride()
             _updateStride = false
@@ -454,7 +454,7 @@ import Observation
         _alignment = result
     }
 
-    public var alignment: Int {
+    @ObservationIgnored public var alignment: Int {
         if _updateAlignment {
             updateAlignment()
             _updateAlignment = false
