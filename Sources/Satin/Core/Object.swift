@@ -31,7 +31,7 @@ import SatinCore
     }
 
     @ObservationIgnored public let visiblePublisher = PassthroughSubject<Bool, Never>()
-    var visible = true {
+    public var visible = true {
         didSet {
             visiblePublisher.send(visible)
         }
@@ -192,7 +192,7 @@ import SatinCore
         }
     }
 
-    @ObservationIgnored var updateLocalMatrix = true {
+    @ObservationIgnored public var updateLocalMatrix = true {
         didSet {
             if updateLocalMatrix {
                 updateLocalBounds = true
@@ -230,7 +230,7 @@ import SatinCore
     }
 
     @ObservationIgnored var _worldMatrixInverse = ValueCache<matrix_float4x4>()
-    @ObservationIgnored  public var worldMatrixInverse: matrix_float4x4 {
+    @ObservationIgnored public var worldMatrixInverse: matrix_float4x4 {
         _worldMatrixInverse.get {
             worldMatrix.inverse
         }
@@ -276,7 +276,7 @@ import SatinCore
 
     // MARK: - Bounds
 
-    @ObservationIgnored  var updateBounds = true {
+    @ObservationIgnored public var updateBounds = true {
         didSet {
             if updateBounds {
                 _updateBounds = true
@@ -304,7 +304,7 @@ import SatinCore
 
     // MARK: - Local Bounds
 
-    @ObservationIgnored  var updateLocalBounds = true {
+    @ObservationIgnored public var updateLocalBounds = true {
         didSet {
             if updateLocalBounds {
                 _updateLocalBounds = true
