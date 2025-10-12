@@ -15,7 +15,7 @@ import Foundation
     public typealias ValueType = T
 
     // Delegate
-    public let valuePublisher = PassthroughSubject<ValueType, Never>()
+    @ObservationIgnored public let valuePublisher = PassthroughSubject<ValueType, Never>()
 
     // Getable Properties
     @ObservationIgnored public var type: ParameterType { .generic }

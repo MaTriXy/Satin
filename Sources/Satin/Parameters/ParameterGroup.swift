@@ -15,7 +15,7 @@ import Observation
 @Observable public final class ParameterGroup: Codable, CustomStringConvertible {
     public let id: String = UUID().uuidString
 
-    public var description: String {
+    @ObservationIgnored public var description: String {
         var dsc = "\(type(of: self)): \(label)\n"
         for param in params {
             dsc += param.description + "\n"
