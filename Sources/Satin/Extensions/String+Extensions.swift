@@ -26,12 +26,21 @@ public extension String {
         if let cached = TitleCaseStringCache[self] {
             return cached
         } else {
-            let titleCase = self.replacingOccurrences(of: "([A-Z])",
+            var titleCase = self.replacingOccurrences(of: "(?<![A-Z])([A-Z][a-z])",
                                                  with: " $1",
                                                  options: .regularExpression,
                                                  range: range(of: self))
                 .trimmingCharacters(in: .whitespacesAndNewlines)
-                .capitalized
+            
+            // Capitalize the first letter of each word, unless the word is all caps (acronym)
+            titleCase = titleCase
+                       .split(separator: " ")
+                       .map { word in
+                           let s = String(word)
+                           if s.uppercased() == s { return s }       // Keep acronyms
+                           return s.prefix(1).uppercased() + s.dropFirst()
+                       }
+                       .joined(separator: " ")
             
             TitleCaseStringCache[self] = titleCase
             
